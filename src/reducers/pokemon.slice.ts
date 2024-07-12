@@ -1,6 +1,5 @@
-// src/store/pokemonSlice.ts
-import { fetchPokemon, Pokemon } from '@/services/pokemonService';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchPokemon, Pokemon } from "@/services/pokemonService";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface PokemonState {
   pokemon: Pokemon | null;
@@ -15,7 +14,7 @@ const initialState: PokemonState = {
 };
 
 const pokemonSlice = createSlice({
-  name: 'pokemon',
+  name: "pokemon",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -24,13 +23,16 @@ const pokemonSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchPokemon.fulfilled, (state, action: PayloadAction<Pokemon>) => {
-        state.loading = false;
-        state.pokemon = action.payload;
-      })
+      .addCase(
+        fetchPokemon.fulfilled,
+        (state, action: PayloadAction<Pokemon>) => {
+          state.loading = false;
+          state.pokemon = action.payload;
+        }
+      )
       .addCase(fetchPokemon.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Fetch failed';
+        state.error = action.error.message || "Fetch failed";
       });
   },
 });

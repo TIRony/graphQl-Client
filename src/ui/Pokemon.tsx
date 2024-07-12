@@ -1,13 +1,13 @@
-import { useAppDispatch } from "@/redux/hook";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { RootState } from "@/redux/store";
+
 import { fetchPokemon } from "@/services/pokemonService";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 const Pokemon = () => {
   const [name, setName] = useState<string>("");
   const dispatch = useAppDispatch();
-  const { pokemon, loading, error } = useSelector(
+  const { pokemon, loading, error } = useAppSelector(
     (state: RootState) => state.pokemon
   );
 
@@ -29,7 +29,6 @@ const Pokemon = () => {
         <button type="submit">Fetch Pokémon</button>
       </form>
       {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
       {pokemon && (
         <div>
           <h1>{pokemon.name}</h1>
@@ -37,6 +36,7 @@ const Pokemon = () => {
           <p>Types: {pokemon.types.join(", ")}</p>
         </div>
       )}
+      {error && <p>Error: {error}</p>}
     </div>
   );
 };

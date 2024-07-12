@@ -1,23 +1,7 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import client from '../utils/graphqlClient';
-import { gql } from 'graphql-request';
+import { login, signup, User } from "@/services/auth.service";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface User {
-  id: string;
-  email: string;
-}
-
-interface AuthResponse {
-  login: {
-    token: string;
-    user: User;
-  };
-  signup: {
-    token: string;
-    user: User;
-  };
-}
-
+// Define AuthState type
 interface AuthState {
   user: User | null;
   token: string | null;
@@ -25,6 +9,7 @@ interface AuthState {
   error: string | null;
 }
 
+// Initial state
 const initialState: AuthState = {
   user: null,
   token: null,
@@ -32,40 +17,9 @@ const initialState: AuthState = {
   error: null,
 };
 
-export const login = createAsyncThunk('auth/login', async ({ email, password }: { email: string, password: string }) => {
-  const query = gql`
-    mutation Login($email: String!, $password: String!) {
-      login(email: $email, password: $password) {
-        token
-        user {
-          id
-          email
-        }
-      }
-    }
-  `;
-  const response = await client.request<AuthResponse>(query, { email, password });
-  return response.login;
-});
-
-export const signup = createAsyncThunk('auth/signup', async ({ email, password }: { email: string, password: string }) => {
-  const query = gql`
-    mutation Signup($email: String!, $password: String!) {
-      signup(email: $email, password: $password) {
-        token
-        user {
-          id
-          email
-        }
-      }
-    }
-  `;
-  const response = await client.request<AuthResponse>(query, { email, password });
-  return response.signup;
-});
-
+// Create the slice
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     logout(state) {
@@ -79,27 +33,33 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<{ token: string, user: User }>) => {
-        state.loading = false;
-        state.token = action.payload.token;
-        state.user = action.payload.user;
-      })
+      .addCase(
+        login.fulfilled,
+        (state, action: PayloadAction<{ token: string; user: User }>) => {
+          state.loading = false;
+          state.token = action.payload.token;
+          state.user = action.payload.user;
+        }
+      )
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Login failed';
+        state.error = action.error.message || "Login failed";
       })
       .addCase(signup.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(signup.fulfilled, (state, action: PayloadAction<{ token: string, user: User }>) => {
-        state.loading = false;
-        state.token = action.payload.token;
-        state.user = action.payload.user;
-      })
+      .addCase(
+        signup.fulfilled,
+        (state, action: PayloadAction<{ token: string; user: User }>) => {
+          state.loading = false;
+          state.token = action.payload.token;
+          state.user = action.payload.user;
+        }
+      )
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Signup failed';
+        state.error = action.error.message || "Signup failed";
       });
   },
 });

@@ -1,10 +1,7 @@
-import Pokemon from "../components/Pokemon";
-
 const Home = () => {
   return (
     <div>
-      <h1>Pokémon Search</h1>
-      <Pokemon />
+      <h1>Hello</h1>
     </div>
   );
 };
