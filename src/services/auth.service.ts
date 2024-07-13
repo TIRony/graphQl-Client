@@ -6,6 +6,7 @@ import client from "@/utils/graphqlClient";
 export interface User {
   id: string;
   email: string;
+  name: string;
 }
 
 interface AuthResponse {
@@ -13,14 +14,15 @@ interface AuthResponse {
     token: string;
     user: User;
   };
-  signup: {
+  createUser: {
+    // Adjust to match your mutation name
     token: string;
     user: User;
   };
 }
 
 export const login = createAsyncThunk(
-  "auth/login",
+  "api/login",
   async ({ email, password }: { email: string; password: string }) => {
     const query = gql`
       mutation Login($email: String!, $password: String!) {
@@ -42,23 +44,36 @@ export const login = createAsyncThunk(
 );
 
 export const signup = createAsyncThunk(
-  "auth/signup",
-  async ({ email, password }: { email: string; password: string }) => {
+  "api/register",
+  async ({
+    name,
+    email,
+    password,
+  }: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
     const query = gql`
-      mutation Signup($email: String!, $password: String!) {
-        signup(email: $email, password: $password) {
+      mutation createUser($name: String!, $email: String!, $password: String!) {
+        createUser(name: $name, email: $email, password: $password) {
           token
           user {
             id
             email
+            name
           }
         }
       }
     `;
+
     const response = await client.request<AuthResponse>(query, {
+      name,
       email,
       password,
     });
-    return response.signup;
+
+    console.log("Signup response:", response); // Check the response structure
+    return response.createUser; // Adjust this to match the response structure
   }
 );

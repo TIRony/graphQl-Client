@@ -35,6 +35,11 @@ const SignupForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
+        <label htmlFor="name">Name</label>
+        <input id="name" {...register("name")} type="name" />
+        {errors.name && <div>{errors.name.message}</div>}
+      </div>
+      <div>
         <label htmlFor="email">Email</label>
         <input id="email" {...register("email")} type="email" />
         {errors.email && <div>{errors.email.message}</div>}

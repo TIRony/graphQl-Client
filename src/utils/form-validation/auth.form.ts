@@ -21,6 +21,7 @@ export const useSignupForm = (onSubmit: (values: SignupSchema) => void) => {
   return useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
