@@ -22,7 +22,7 @@ interface AuthResponse {
 }
 
 export const login = createAsyncThunk(
-  "api/login",
+  "auth/login",
   async ({ email, password }: { email: string; password: string }) => {
     const query = gql`
       mutation Login($email: String!, $password: String!) {
@@ -44,7 +44,7 @@ export const login = createAsyncThunk(
 );
 
 export const signup = createAsyncThunk(
-  "api/register",
+  "auth/register",
   async ({
     name,
     email,
@@ -73,7 +73,7 @@ export const signup = createAsyncThunk(
       password,
     });
 
-    console.log("Signup response:", response); // Check the response structure
-    return response.createUser; // Adjust this to match the response structure
+    console.log("Signup response:", response);
+    return response.createUser;
   }
 );
